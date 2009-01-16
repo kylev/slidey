@@ -7,7 +7,7 @@ from slideshow.slidey.models import SlideShow
 def index(request):
     t = loader.get_template('index.html')
     all_shows = SlideShow.objects.all()
-    return render_to_response('index.html', {'shows': all_shows})
+    return render_to_response('index.html', {'show_list': all_shows})
 
 
 def show(request, show_id):

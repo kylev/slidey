@@ -2,6 +2,31 @@
 
 {% block title %}Welcome{% endblock %}
 
+{% block pagescript %}
+<script>
+  $(document).ready(function(){
+    $("#example > ul").tabs();
+  });
+</script>
+{% endblock %}
+
 {% block content %}
-<p>Foo</p>
+<div id="example">
+  <ul>
+    <li><a href="#slide-select"><span>Show</span></a></li>
+    <li><a href="#login"><span>Admin</span></a></li>
+  </ul>
+  <div id="slide-select">
+    <p>Select a slide show
+      <form><select>
+{% for show in show_list %}
+        <option value="{{ show.id }}">{{ show.show_name }}</option>
+{% endfor %}
+     </select></form>
+    </p>
+  </div>
+  <div id="login">
+    I will be your login form.
+  </div>
+</div>
 {% endblock %}
