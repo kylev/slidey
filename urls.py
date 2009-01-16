@@ -4,9 +4,9 @@ from django.conf.urls.defaults import *
 # from django.contrib import admin
 # admin.autodiscover()
 
-urlpatterns = patterns('',
-    # Example:
-    # (r'^slideshow/', include('slideshow.foo.urls')),
+urlpatterns = patterns(
+    '',
+    (r'^slideshow/', include('slideshow.slidey.urls')),
 
     # Uncomment the admin/doc line below and add 'django.contrib.admindocs' 
     # to INSTALLED_APPS to enable admin documentation:
