@@ -1,0 +1,399 @@
+<div id="widget-docs">
+<ul>
+<li>
+<a href="#docs-overview"><span>Overview</span></a>
+</li>
+<li>
+<a href="#docs-options"><span>Options</span></a>
+</li>
+<li>
+<a href="#docs-methods"><span>Methods</span></a>
+</li>
+<li>
+<a href="#docs-theming"><span>Theming</span></a>
+</li>
+</ul>
+<div id="docs-overview">
+<div id="docs-overview-sidebar">
+<h4>Dependencies:</h4>
+<ul>
+<li>
+<a href="#">ui.core.js</a>
+</li>
+<li>
+<a href="#">ui.draggable.js <span>(Optional)</span></a>
+</li>
+<li>
+<a href="#">ui.resizable.js <span>(Optional)</span></a>
+</li>
+</ul>
+</div>
+<div id="docs-overview-main">
+<p>Make the selected elements Accordion widgets.</p>
+<p> Semantic requirements:<br>
+<br>The markup of your accordion container needs pairs of headers and content panels, grouped by another element. By default, the header elements are anchors, assuming the following structure:<br>
+<br>&lt;pre&gt;&amp;lt;div id="accordion"&amp;gt;
+  &amp;lt;div&amp;gt;
+    &amp;lt;a href="#"&amp;gt;First header&amp;lt;/a&amp;gt;
+    &amp;lt;div&amp;gt;First content&amp;lt;/div&amp;gt;
+  &amp;lt;/div&amp;gt;
+  &amp;lt;div&amp;gt;
+    &amp;lt;a href="#"&amp;gt;Second header&amp;lt;/a&amp;gt;
+    &amp;lt;div&amp;gt;Second content&amp;lt;/div&amp;gt;
+  &amp;lt;/div&amp;gt;
+&amp;lt;/div&amp;gt;&lt;/pre&gt;<br>
+<br>If you use a different element for the header, specify the header-option with an appropiate selector, eg. header: "h3". The content element must be always next to it's header.<br>
+<br>If you have links inside the accordion content and use a-elements as headers, add a class to them and use that as the header, eg. header: "a.header".<br>
+<br>Use activate(Number) to change the active content programmatically.<br>
+<br>A "accordionchange" event is triggered every time the accordion changes.
+If the accordion is animated, the event will be triggered upon completion
+of the animation; otherwise, it is triggered immediately.
+&lt;pre&gt;$(".ui-accordion").bind("accordionchange", function(event, ui) {
+  ui.options // options used to intialize this widget
+  ui.newHeader // jQuery, activated header
+  ui.oldHeader // jQuery, previous header
+  ui.newContent // jQuery, activated content
+  ui.oldContent // jQuery, previous content
+});&lt;/pre&gt;
+</p>
+</div>
+</div>
+<div id="docs-options">
+<p class="intro">A set of key/value pairs that configure the accordion. All options are optional.</p>
+<div class="docs-list-header clearfix">
+<h2>Property options</h2>
+<p>
+<a href="#">Show details</a> | <a href="#">Hide details</a>
+</p>
+</div>
+<div class="docs-list clearfix">
+<div class="param">
+<div class="param-header">
+<h3>
+<span>active</span>
+</h3>
+<p class="param-type">
+<span title="">String, Element, jQuery, Boolean, Number</span>
+</p>
+<p class="param-default">Default: first child</p>
+</div>
+<div class="param-details">
+<p>Selector for the active element. Set to false to display none at start. Needs &amp;laquo;alwaysOpen: false&amp;raquo;.</p>
+</div>
+</div>
+<div class="param">
+<div class="param-header">
+<h3>
+<span>alwaysOpen</span>
+</h3>
+<p class="param-type">
+<span title="true or false.">Boolean</span>
+</p>
+<p class="param-default">Default: true</p>
+</div>
+<div class="param-details">
+<p>Whether there must be one content element open. Allows collapsing the active section by the triggering event (click is the default).</p>
+</div>
+</div>
+<div class="param">
+<div class="param-header">
+<h3>
+<span>animated</span>
+</h3>
+<p class="param-type">
+<span title="">Boolean, String</span>
+</p>
+<p class="param-default">Default: 'slide'</p>
+</div>
+<div class="param-details">
+<p>Choose your favorite animation, or disable them (set to false). In addition to the default, "bounceslide" and "easeslide" are supported (both require the easing plugin).</p>
+</div>
+</div>
+<div class="param">
+<div class="param-header">
+<h3>
+<span>autoHeight</span>
+</h3>
+<p class="param-type">
+<span title="true or false.">Boolean</span>
+</p>
+<p class="param-default">Default: true</p>
+</div>
+<div class="param-details">
+<p>If set, the highest content part is used as height reference for all other parts. Provides more consistent animations.</p>
+</div>
+</div>
+<div class="param">
+<div class="param-header">
+<h3>
+<span>clearStyle</span>
+</h3>
+<p class="param-type">
+<span title="true or false.">Boolean</span>
+</p>
+<p class="param-default">Default: false</p>
+</div>
+<div class="param-details">
+<p>If set, clears height and overflow styles after finishing animations. This enables accordions to work with dynamic content. Won't work together with autoheight.</p>
+</div>
+</div>
+<div class="param">
+<div class="param-header">
+<h3>
+<span>event</span>
+</h3>
+<p class="param-type">
+<span title="A string of characters.">String</span>
+</p>
+<p class="param-default">Default: "click"</p>
+</div>
+<div class="param-details">
+<p>The event on which to trigger the accordion.</p>
+</div>
+</div>
+<div class="param">
+<div class="param-header">
+<h3>
+<span>fillSpace</span>
+</h3>
+<p class="param-type">
+<span title="true or false.">Boolean</span>
+</p>
+<p class="param-default">Default: false</p>
+</div>
+<div class="param-details">
+<p>If set, the accordion completely fills the height of the parent element. Overrides autoheight.</p>
+</div>
+</div>
+<div class="param">
+<div class="param-header">
+<h3>
+<span>header</span>
+</h3>
+<p class="param-type">
+<span title="">String, Element, jQuery</span>
+</p>
+<p class="param-default">Default: a</p>
+</div>
+<div class="param-details">
+<p>Selector for the header element. </p>
+</div>
+</div>
+<div class="param">
+<div class="param-header">
+<h3>
+<span>icons</span>
+</h3>
+<p class="param-type">
+<span title="A simple Javascript object..">Object</span>
+</p>
+<p class="param-default">Default: </p>
+</div>
+<div class="param-details">
+<p>Icons to use for headers. Available icons are "header" and "headerSelected"</p>
+</div>
+</div>
+<div class="param">
+<div class="param-header">
+<h3>
+<span>navigation</span>
+</h3>
+<p class="param-type">
+<span title="true or false.">Boolean</span>
+</p>
+<p class="param-default">Default: false</p>
+</div>
+<div class="param-details">
+<p>If set, looks for the anchor that matches location.href and activates it. Great for href-based state-saving. Use navigationFilter to implement your own matcher.</p>
+</div>
+</div>
+<div class="param">
+<div class="param-header">
+<h3>
+<span>navigationFilter</span>
+</h3>
+<p class="param-type">
+<span title="A reference to a Javascript function.">Function</span>
+</p>
+<p class="param-default">Default: </p>
+</div>
+<div class="param-details">
+<p>Overwrite the default location.href-matching with your own matcher.</p>
+</div>
+</div>
+<div class="param">
+<div class="param-header">
+<h3>
+<span>selectedClass</span>
+</h3>
+<p class="param-type">
+<span title="A string of characters.">String</span>
+</p>
+<p class="param-default">Default: 'selected'</p>
+</div>
+<div class="param-details">
+<p>Class for active header elements.</p>
+</div>
+</div>
+</div>
+<div class="docs-list-header clearfix">
+<h2>Event options</h2>
+<p>
+<a href="#">Show details</a> | <a href="#">Hide details</a>
+</p>
+</div>
+<div class="docs-list clearfix"></div>
+</div>
+<div id="docs-methods">
+<p class="intro">A brief description of methods and their uses goes here so their use is clearly explained and any caveats can be mentioned up front.</p>
+<div class="docs-list-header clearfix">
+<h2>Methods</h2>
+<p>
+<a href="#">Show details</a> | <a href="#">Hide details</a>
+</p>
+</div>
+<div class="docs-list clearfix">
+<div class="param">
+<div class="param-header">
+<h3>
+<span>accordion( "activate", index
+								 )</span>
+</h3>
+<p class="param-type">Returns: <span title="A jQuery object.">jQuery</span>
+</p>
+</div>
+<div class="param-details">
+<p>Activate a content part of the Accordion programmatically.</p>
+<p>The index can be a zero-indexed number to match the position of the header to close or a string expression matching an element. Pass -1 to close all (only possible with alwaysOpen:false).</p>
+<h4>Arguments:</h4>
+<table class="param-args" summary="Arguments for this method" cellspacing="0">
+<tbody>
+<tr>
+<td>index</td><td>String, Element, jQuery, Boolean, Number</td><td>An Integer specifying the zero-based index of the content to be activated or an expression specifying the element, or an element/jQuery object, or a boolean false to close all.</td>
+</tr>
+</tbody>
+</table>
+<h4>Code sample:</h4>
+<h5>Activate the second content panel.</h5>
+<code>$(".selector").accordion("activate", 1);</code>
+<h5>Close all content parts of the accordion.</h5>
+<code>$(".selector").accordion("activate", false);</code>
+<h5>Activate the first element matching the given expression.</h5>
+<code>$(".selector").accordion("activate", "a:first");</code>
+</div>
+</div>
+<div class="param">
+<div class="param-header">
+<h3>
+<span>accordion( "enable"
+								 )</span>
+</h3>
+<p class="param-type">Returns: <span title="A jQuery object.">jQuery</span>
+</p>
+</div>
+<div class="param-details">
+<p>Enable the selected accordion.</p>
+<p>Enabling an accordion reverts the change made by accordion("disable"), turning the behaviour back to the usual state.</p>
+<h4>Arguments:</h4>
+<table class="param-args" summary="Arguments for this method" cellspacing="0">
+<tbody></tbody>
+</table>
+<h4>Code sample:</h4>
+<h5>Activate the second content of the Accordion contained in &lt;div id="accordion"&gt;.</h5>
+<code>$(".selector").accordion("enable")</code>
+</div>
+</div>
+<div class="param">
+<div class="param-header">
+<h3>
+<span>accordion( "disable"
+								 )</span>
+</h3>
+<p class="param-type">Returns: <span title="A jQuery object.">jQuery</span>
+</p>
+</div>
+<div class="param-details">
+<p>Disables the selected accordion.</p>
+<p>Disabling an accordion turns off the ability to close or open anything in the accordion, it disables all interactions.
+
+To completely remove the accordion behaviour, including visual changes, use &lt;a href='UI/Accordion/accordion#.22destroy.22'&gt;accordion("destroy")&lt;/a&gt;.</p>
+<h4>Arguments:</h4>
+<table class="param-args" summary="Arguments for this method" cellspacing="0">
+<tbody></tbody>
+</table>
+<h4>Code sample:</h4>
+<h5>Activate the second content of the Accordion contained in &lt;div id="accordion"&gt;.</h5>
+<code>$(".selector").accordion("disable")</code>
+</div>
+</div>
+<div class="param">
+<div class="param-header">
+<h3>
+<span>accordion( "destroy"
+								 )</span>
+</h3>
+<p class="param-type">Returns: <span title="A jQuery object.">jQuery</span>
+</p>
+</div>
+<div class="param-details">
+<p>Destroy the selected accordion.</p>
+<p>Destroying the accordion completely reverts changes made by accordion), including events and styles.
+
+To just temporily disable the behaviour of an accordion, use &lt;a href='UI/Accordion/accordion#.22disable.22'&gt;accordion("disable")&lt;/a&gt;.</p>
+<h4>Arguments:</h4>
+<table class="param-args" summary="Arguments for this method" cellspacing="0">
+<tbody></tbody>
+</table>
+<h4>Code sample:</h4>
+<h5>Activate the second content of the Accordion contained in &lt;div id="accordion"&gt;.</h5>
+<code>$(".selector").accordion("disable")</code>
+</div>
+</div>
+</div>
+</div>
+<div id="docs-theming">
+<p class="intro">ui.dialog uses the jQuery UI CSS styles framework for all major components, e.g. for the titlebar, the resize handle, etc., some of which are borrowed from ui.resizable.</p>
+<h3>Sample code with CSS classes</h3>
+<p>Use the classes highlighted in bold to customize the dialog:</p>
+<code>
+				&lt;div class="<strong>ui-dialog</strong>" role="dialog" aria-labelledby="ui-dialog-title-1"&gt;<br>
+				&nbsp;&nbsp;&lt;div class="<strong>ui-dialog-titlebar</strong>"&gt;<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;span class="<strong>ui-dialog-title</strong>" id="ui-dialog-title-1"&gt;Dialog Title&lt;/span&gt;<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;a href="#" class="<strong>ui-dialog-titlebar-close</strong>" role="button" title="Close"&gt;<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;span class="<strong>ui-icon ui-icon-closethick</strong>"&gt;Close&lt;/span&gt;&lt;/a&gt;<br>
+				&nbsp;&nbsp;&lt;/div&gt;<br>
+				&nbsp;&nbsp;&lt;div class="<strong>ui-dialog-content</strong>" style="height: 13em;"&gt;<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;p&gt;Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt&lt;/p&gt;<br>
+				&nbsp;&nbsp;&lt;/div&gt;<br>
+				&nbsp;&nbsp;&lt;div class="<strong>ui-dialog-buttonpane</strong>"&gt;<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;button class="ui-state-default ui-priority-primary ui-corner-all"&gt;Primary&lt;/button&gt;<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;button class="ui-state-default ui-priority-secondary ui-corner-all"&gt;Secondary&lt;/button&gt;<br>
+				&nbsp;&nbsp;&nbsp;&nbsp;&lt;button class="ui-state-default ui-state-disabled ui-corner-all"&gt;Disabled&lt;/button&gt;<br>
+				&nbsp;&nbsp;&lt;/div&gt;<br>
+				&nbsp;&nbsp;&lt;div class="ui-resizable-n ui-resizable-handle"&gt;&lt;/div&gt;<br>
+				&nbsp;&nbsp;&lt;div class="ui-resizable-s ui-resizable-handle"&gt;&lt;/div&gt;<br>
+				&nbsp;&nbsp;&lt;div class="ui-resizable-e ui-resizable-handle"&gt;&lt;/div&gt;<br>
+				&nbsp;&nbsp;&lt;div class="ui-resizable-w ui-resizable-handle"&gt;&lt;/div&gt;<br>
+				&nbsp;&nbsp;&lt;div class="ui-resizable-ne ui-resizable-handle"&gt;&lt;/div&gt;<br>
+				&nbsp;&nbsp;&lt;div class="ui-resizable-se ui-resizable-handle ui-icon ui-icon-grip-diagonal-se"&gt;&lt;/div&gt;<br>
+				&nbsp;&nbsp;&lt;div class="ui-resizable-sw ui-resizable-handle"&gt;&lt;/div&gt;<br>
+				&nbsp;&nbsp;&lt;div class="ui-resizable-nw ui-resizable-handle"&gt;&lt;/div&gt;<br>
+				&lt;/div&gt;
+				</code>
+<h3>See also</h3>
+<ul>
+<li>
+<a href="#">UI/Resizables plugin documentation</a>
+</li>
+<li>
+<a href="#">How to create a custom theme</a>
+</li>
+<li>
+<a href="#">jQuery UI CSS Framework documentation</a>
+</li>
+<li>
+<a href="#">ThemeRoller: Create your own custom theme</a>
+</li>
+</ul>
+</div>
+</div>

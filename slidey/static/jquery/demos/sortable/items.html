@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>jQuery UI Sortable - Excluding Items Demo</title>
+	<link type="text/css" href="../../themes/base/ui.all.css" rel="stylesheet" />
+	<script type="text/javascript" src="../../jquery-1.3.js"></script>
+	<script type="text/javascript" src="../../ui/ui.core.js"></script>
+	<script type="text/javascript" src="../../ui/ui.sortable.js"></script>
+	<link type="text/css" href="../demos.css" rel="stylesheet" />
+	<style type="text/css">
+	#sortable, #sortable2 { list-style-type: none; margin: 0; padding: 0; }
+	.demo li { margin: 5px; padding: 3px; font-size: 1.2em; }
+	</style>
+	<script type="text/javascript">
+	$(function() {
+		$("#sortable").sortable({
+			items: 'li:not(.ui-state-disabled)'
+		});
+		$("#sortable2").sortable({
+			cancel: '.ui-state-disabled'
+		});
+	});
+	</script>
+</head>
+<body>
+<div class="demo">
+
+<p>Completely exclude items from the sorting logic using the 'items' option</p>
+
+<ul id="sortable">
+	<li class="ui-state-default">Item 1</li>
+	<li class="ui-state-default ui-state-disabled">(I'm not sortable)</li>
+	<li class="ui-state-default ui-state-disabled">(I'm not sortable)</li>
+	<li class="ui-state-default">Item 4</li>
+</ul>
+
+<p>Keep the items as valid targets, but non-draggable, using the 'cancel' option</p>
+
+<ul id="sortable2">
+	<li class="ui-state-default">Item 1</li>
+	<li class="ui-state-default ui-state-disabled">(I'm not sortable)</li>
+	<li class="ui-state-default ui-state-disabled">(I'm not sortable)</li>
+	<li class="ui-state-default">Item 4</li>
+</ul>
+
+</div><!-- End demo -->
+
+<div class="demo-description">
+
+<p>
+
+</p>
+
+</div><!-- End demo-description -->
+
+</body>
+</html>

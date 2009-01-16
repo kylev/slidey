@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<title>jQuery UI Datepicker - Default Demo</title>
+	<link type="text/css" href="../../themes/base/ui.all.css" rel="stylesheet" />
+	<script type="text/javascript" src="../../jquery-1.3.js"></script>
+	<script type="text/javascript" src="../../ui/ui.core.js"></script>
+	<script type="text/javascript" src="../../ui/ui.datepicker.js"></script>
+	<link type="text/css" href="../demos.css" rel="stylesheet" />
+	<script type="text/javascript">
+	$(function() {
+		$("#datepicker").datepicker();
+	});
+	</script>
+</head>
+<body>
+
+<div class="demo">
+
+<p>Date: <input type="text" id="datepicker"></p>
+
+</div><!-- End demo -->
+
+<div class="demo-description">
+
+<p>This is a default datepicker which is tied to a standard form input. The calendar opens in a small overlay onFocus and closes automatically onBlur if a date if selected.</p>
+<p>You can also use the keyboard to drive the datepicker:</p>
+<ul>
+	<li>page up/down - previous/next month</li>
+	<li>ctrl+page up/down - previous/next year</li>
+	<li>ctrl+home - current month or open when closed</li>
+	<li>ctrl+left/right - previous/next day</li>
+	<li>ctrl+up/down - previous/next week</li>
+	<li>enter - accept the selected date</li>
+	<li>ctrl+end - close and erase the date</li>
+	<li>escape - close the datepicker without selection</li>
+</ul>
+
+</div><!-- End demo-description -->
+
+</body>
+</html>
