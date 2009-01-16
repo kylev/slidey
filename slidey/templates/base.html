@@ -3,12 +3,15 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
 <head>
   <title>{% block title %}Slidey{% endblock %}</title>
+  <script type="text/javascript" src="{% url slidey-static "jquery.js" %}"></script>
 </head>
 <body>
 
 <div id="content">
 {% block content %}{% endblock %}
 </div>
+
+
 
 </body>
 </html>
