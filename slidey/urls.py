@@ -14,4 +14,6 @@ urlpatterns = patterns(
     RegexURLPattern(r'^static/(?P<path>.*)$', django.views.static.serve,
                     {'document_root': APP_DIR + '/static'}, 'slidey-static'),
     (r'(?P<show_id>\d+)/$', 'show'),
+    (r'^login/$', 'login', None, 'slidey-login'),
+    (r'^manage/$', 'manage', None, 'slidey-manage'),
     )
