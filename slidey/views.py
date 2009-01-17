@@ -23,9 +23,12 @@ def show(request, show_id):
 
 
 def login(request):
-    username = request.POST['username']
-    password = request.POST['password']
-    user = authenticate(username=username, password=password)
+    #username = request.POST['username']
+    #password = request.POST['password']
+    #user = authenticate(username=username, password=password)
+    form = AuthenticationForm(request.POST)
+    form.is_valid()
+    user = form.get_user()
     if user is not None:
         if user.is_active:
             login(request, user)
