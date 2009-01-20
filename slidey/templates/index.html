@@ -13,9 +13,23 @@
 {% block content %}
 <div id="example">
   <ul>
-    <li><a href="#slide-select"><span>Show</span></a></li>
     <li><a href="#login"><span>Admin</span></a></li>
+    <li><a href="#slide-select"><span>Show</span></a></li>
   </ul>
+  <div id="login">
+    {% if form.errors %}
+    <p>Your username and password didn't match. Please try again.</p>
+    {% endif %}
+
+    <form method="post" action="{% url slidey-login %}">
+    <table>
+      <tr><td>{{ form.username.label_tag }}</td><td>{{ form.username }}</td></tr>
+      <tr><td>{{ form.password.label_tag }}</td><td>{{ form.password }}</td></tr>
+    </table>
+
+    <input type="submit" value="login" />
+    </form>
+  </div>
   <div id="slide-select">
     <p>Select a slide show
       <form><select>
@@ -24,20 +38,6 @@
 {% endfor %}
      </select></form>
     </p>
-  </div>
-  <div id="login">
-    {% if form.errors %}
-    <p>Your username and password didn't match. Please try again.</p>
-    {% endif %}
-
-<form method="post" action="{% url slidey-login %}">
-<table>
-<tr><td>{{ form.username.label_tag }}</td><td>{{ form.username }}</td></tr>
-<tr><td>{{ form.password.label_tag }}</td><td>{{ form.password }}</td></tr>
-</table>
-
-<input type="submit" value="login" />
-</form>
   </div>
 </div>
 {% endblock %}
