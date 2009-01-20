@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Show{% endblock %}
+
+{% block content %}
+<ul>
+{% for slide in slide_list %}
+  <li>{{ slide.url|urlize }}</li>
+{% endfor %}
+</ul>
+{% endblock %}

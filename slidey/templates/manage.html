@@ -3,9 +3,11 @@
 {% block title %}Manage{% endblock %}
 
 {% block content %}
+<p>Select a slide show to edit.</p>
+
 <ul>
 {% for show in show_list %}
-        <option value="{{ show.id }}">{{ show.show_name }}</option>
+  <li><a href="{% url slidey-edit show_id=show.id %}">{{ show.show_name }}</a></li>
 {% endfor %}
 </ul>
 {% endblock %}

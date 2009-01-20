@@ -54,4 +54,7 @@ def manage(request):
 
 @login_required
 def edit(request, show_id):
-    return HttpResponse("Running as %s editing show %s." % (request.user, show_id))
+    slides = SlideShow.objects.get(id=show_id).display_items.all()
+
+    return render_to_response('edit_show.html', {'slide_list': slides})
+

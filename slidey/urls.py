@@ -13,5 +13,5 @@ urlpatterns = patterns(
     (r'^(?P<show_id>\d+)/$', 'show'),
     (r'^login/$', 'do_login', None, 'slidey-login'),
     (r'^manage/$', 'manage', None, 'slidey-manage'),
-    (r'^edit/(?P<show_id>\d+)/$', 'edit'),
+    (r'^edit/(?P<show_id>\d+)/$', 'edit', None, 'slidey-edit'),
     )
