@@ -12,9 +12,6 @@ from django.template import loader
 from slideshow.slidey.models import SlideShow
 
 
-STATIC_ROOT = os.path.dirname(os.path.normpath(__file__)) + '/static'
-
-
 def index(request, form=None):
     if not form:
         form = AuthenticationForm()
@@ -23,6 +20,8 @@ def index(request, form=None):
     return render_to_response('index.html', {'show_list': all_shows,
                                              'form': form})
 
+
+STATIC_ROOT = os.path.dirname(os.path.normpath(__file__)) + '/static'
 
 def static(request, path):
     """Return app-relative static resources and collateral."""
@@ -48,4 +47,11 @@ def do_login(request):
 
 @login_required
 def manage(request):
-    return HttpResponse("Running as %s." % (request.user,))
+    my_shows = SlideShow.objects.filter(owner=request.user)
+
+    return render_to_response('manage.html', {'show_list': my_shows})
+
+
+@login_required
+def edit(request, show_id):
+    return HttpResponse("Running as %s editing show %s." % (request.user, show_id))

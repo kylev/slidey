@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block title %}Manage{% endblock %}
+
+{% block content %}
+<ul>
+{% for show in show_list %}
+        <option value="{{ show.id }}">{{ show.show_name }}</option>
+{% endfor %}
+</ul>
+{% endblock %}
