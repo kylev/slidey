@@ -1,3 +1,6 @@
+import os
+
+import django.views.static
 from django.contrib.auth import authenticate
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
@@ -6,6 +9,10 @@ from django.shortcuts import render_to_response
 from django.template import loader
 
 from slideshow.slidey.models import SlideShow
+
+
+STATIC_ROOT = os.path.dirname(os.path.normpath(__file__)) + '/static'
+
 
 def index(request):
     if request.method == 'POST':
@@ -18,7 +25,13 @@ def index(request):
                                              'form': form})
 
 
+def static(request, path):
+    """Return app-relative static resources and collateral."""
+    return django.views.static.serve(request, path, STATIC_ROOT)
+
+
 def show(request, show_id):
+    """TODO Display a slide show."""
     return HttpResponse("Show %s." % (show_id,))
 
 
