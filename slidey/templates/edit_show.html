@@ -2,8 +2,17 @@
 
 {% block title %}Edit Show{% endblock %}
 
+{% block pagescript %}
+<script>
+$(document).ready(function(){
+  $("#slides").sortable({});
+  }
+)
+</script>
+{% endblock %}
+
 {% block content %}
-<ul>
+<ul id="slides">
 {% for slide in slide_list %}
   <li>{{ slide.url|urlize }}</li>
 {% endfor %}
