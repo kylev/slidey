@@ -30,7 +30,12 @@ def static(request, path):
 
 def show(request, show_id):
     """TODO Display a slide show."""
-    return HttpResponse("Show %s." % (show_id,))
+    return render_to_response('show_frameset.html', {'show_id': show_id})
+
+
+def show_control(request, show_id):
+    slides = SlideShow.objects.get(id=show_id).display_items.all()
+    return render_to_response('show_control.html', {'slides': slides})
 
 
 def do_login(request):

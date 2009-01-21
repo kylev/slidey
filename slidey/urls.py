@@ -1,9 +1,4 @@
-import os
-
-from django.conf.urls.defaults import *
-
-
-APP_DIR = os.path.dirname(os.path.normpath(__file__))
+from django.conf.urls.defaults import patterns
 
 
 urlpatterns = patterns(
@@ -11,6 +6,7 @@ urlpatterns = patterns(
     (r'^$', 'index'),
     (r'^static/(?P<path>.*)$', 'static', None, 'slidey-static'),
     (r'^(?P<show_id>\d+)/$', 'show'),
+    (r'^show_control/(?P<show_id>\d+)/$', 'show_control', None, 'slidey-control'),
     (r'^login/$', 'do_login', None, 'slidey-login'),
     (r'^manage/$', 'manage', None, 'slidey-manage'),
     (r'^edit/(?P<show_id>\d+)/$', 'edit', None, 'slidey-edit'),

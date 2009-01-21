@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}Show Control{% endblock %}
+
+{% block pagescript %}
+<script>
+  $(document).ready(function(){
+    $(window.frames.content).write('blah')
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+<p>Control frame, ignore.</p>
+{% endblock content %}
