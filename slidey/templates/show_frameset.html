@@ -4,6 +4,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Slide Show</title>
+  <script type="text/javascript" src="{% url slidey-static "jquery/jquery-1.3.js" %}"></script>
+<script>
+  $(document).ready(function(){
+    $("#showspace.document").location = "http://www.kylev.com/";
+  });
+</script>
 </head>
 
 <frameset rows="10%,*">
