@@ -14,7 +14,7 @@ class SlideShow(models.Model):
     display_items = models.ManyToManyField(DisplayItem, through="ShowItems")
 
 
-class ShowItems(models.Model):
+class ShowItem(models.Model):
     slide_show = models.ForeignKey(SlideShow)
     display_item = models.ForeignKey(DisplayItem)
     order = models.IntegerField()
