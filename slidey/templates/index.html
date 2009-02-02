@@ -5,13 +5,13 @@
 {% block pagescript %}
 <script>
   $(document).ready(function(){
-    $("#example > ul").tabs();
+    $("#tabs").tabs();
   });
 </script>
 {% endblock %}
 
 {% block content %}
-<div id="example">
+<div id="tabs">
   <ul>
     <li><a href="#login"><span>Admin</span></a></li>
     <li><a href="#slide-select"><span>Show</span></a></li>
@@ -31,8 +31,8 @@
     </form>
   </div>
   <div id="slide-select">
-    <p>Select a slide show
       <form><select>
+        <option selected="selected">Select a slide show</option>
 {% for show in show_list %}
         <option value="{{ show.id }}">{{ show.show_name }}</option>
 {% endfor %}
