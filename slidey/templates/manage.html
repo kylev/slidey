@@ -2,12 +2,20 @@
 
 {% block title %}Manage{% endblock %}
 
+{% block pagescript %}
+<script>
+  $(function() {
+    $("#showlist").selectable();
+  });
+</script>
+{% endblock %}
+
 {% block content %}
 <p>Select a slide show to edit.</p>
 
-<ul>
+<ul id="showlist" style="list-style-type: none; margin: 0; padding: 0; width: 60%;">
 {% for show in show_list %}
-  <li><a href="{% url slidey-edit show_id=show.id %}">{{ show.show_name }}</a>
+  <li class="ui-widget-content"><a href="{% url slidey-edit show_id=show.id %}">{{ show.show_name }}</a>
     <a href="../{{ show.id }}/">Launch</a></li>
 {% endfor %}
 </ul>
