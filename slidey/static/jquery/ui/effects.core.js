@@ -1,5 +1,5 @@
 /*
- * jQuery UI Effects 1.6rc5
+ * jQuery UI Effects 1.6rc6
  *
  * Copyright (c) 2009 AUTHORS.txt (http://ui.jquery.com/about)
  * Dual licensed under the MIT (MIT-LICENSE.txt)
@@ -12,27 +12,27 @@
 $.effects = $.effects || {}; //Add the 'effects' scope
 
 $.extend($.effects, {
-	version: "1.6rc5",
-	
+	version: "1.6rc6",
+
 	// Saves a set of properties in a data storage
 	save: function(element, set) {
 		for(var i=0; i < set.length; i++) {
 			if(set[i] !== null) element.data("ec.storage."+set[i], element[0].style[set[i]]);
 		}
 	},
-	
+
 	// Restores a set of previously saved properties from a data storage
 	restore: function(element, set) {
 		for(var i=0; i < set.length; i++) {
 			if(set[i] !== null) element.css(set[i], element.data("ec.storage."+set[i]));
 		}
 	},
-	
+
 	setMode: function(el, mode) {
 		if (mode == 'toggle') mode = el.is(':hidden') ? 'show' : 'hide'; // Set for toggle
 		return mode;
 	},
-	
+
 	getBaseline: function(origin, original) { // Translates a [top,left] array into a baseline value
 		// this should be a little more flexible in the future to handle a string & hash
 		var y, x;
@@ -50,7 +50,7 @@ $.extend($.effects, {
 		};
 		return {x: x, y: y};
 	},
-	
+
 	// Wraps the element around a wrapper that copies position properties
 	createWrapper: function(element) {
 
@@ -132,9 +132,21 @@ $.extend($.effects, {
 	}
 });
 
+
+function _normalizeArguments(a, m) {
+
+	var o = a[1] && a[1].constructor == Object ? a[1] : {}; if(m) o.mode = m;
+	var speed = a[1] && a[1].constructor != Object ? a[1] : o.duration; //either comes from options.duration or the second argument
+		speed = $.fx.off ? 0 : typeof speed === "number" ? speed : $.fx.speeds[speed] || $.fx.speeds._default;
+	var callback = o.callback || ( $.isFunction(a[2]) && a[2] ) || ( $.isFunction(a[3]) && a[3] );
+
+	return [a[0], o, speed, callback];
+	
+}
+
 //Extend the methods of jQuery
 $.fn.extend({
-	
+
 	//Save old methods
 	_show: $.fn.show,
 	_hide: $.fn.hide,
@@ -142,39 +154,36 @@ $.fn.extend({
 	_addClass: $.fn.addClass,
 	_removeClass: $.fn.removeClass,
 	_toggleClass: $.fn.toggleClass,
-	
+
 	// New effect methods
 	effect: function(fx, options, speed, callback) {
 		return $.effects[fx] ? $.effects[fx].call(this, {method: fx, options: options || {}, duration: speed, callback: callback }) : null;
 	},
-	
+
 	show: function() {
 		if(!arguments[0] || (arguments[0].constructor == Number || (/(slow|normal|fast)/).test(arguments[0])))
 			return this._show.apply(this, arguments);
 		else {
-			var o = arguments[1] || {}; o['mode'] = 'show';
-			return this.effect.apply(this, [arguments[0], o, arguments[2] || o.duration, arguments[3] || o.callback]);
+			return this.effect.apply(this, _normalizeArguments(arguments, 'show'));
 		}
 	},
-	
+
 	hide: function() {
 		if(!arguments[0] || (arguments[0].constructor == Number || (/(slow|normal|fast)/).test(arguments[0])))
 			return this._hide.apply(this, arguments);
 		else {
-			var o = arguments[1] || {}; o['mode'] = 'hide';
-			return this.effect.apply(this, [arguments[0], o, arguments[2] || o.duration, arguments[3] || o.callback]);
+			return this.effect.apply(this, _normalizeArguments(arguments, 'hide'));
 		}
 	},
-	
+
 	toggle: function(){
 		if(!arguments[0] || (arguments[0].constructor == Number || (/(slow|normal|fast)/).test(arguments[0])) || (arguments[0].constructor == Function))
 			return this.__toggle.apply(this, arguments);
 		else {
-			var o = arguments[1] || {}; o['mode'] = 'toggle';
-			return this.effect.apply(this, [arguments[0], o, arguments[2] || o.duration, arguments[3] || o.callback]);
+			return this.effect.apply(this, _normalizeArguments(arguments, 'toggle'));
 		}
 	},
-	
+
 	addClass: function(classNames, speed, easing, callback) {
 		return speed ? $.effects.animateClass.apply(this, [{ add: classNames },speed,easing,callback]) : this._addClass(classNames);
 	},
@@ -182,7 +191,7 @@ $.fn.extend({
 		return speed ? $.effects.animateClass.apply(this, [{ remove: classNames },speed,easing,callback]) : this._removeClass(classNames);
 	},
 	toggleClass: function(classNames,speed,easing,callback) {
-		return speed ? $.effects.animateClass.apply(this, [{ toggle: classNames },speed,easing,callback]) : this._toggleClass(classNames);
+		return ( (typeof speed !== "boolean") && speed ) ? $.effects.animateClass.apply(this, [{ toggle: classNames },speed,easing,callback]) : this._toggleClass(classNames, speed);
 	},
 	morph: function(remove,add,speed,easing,callback) {
 		return $.effects.animateClass.apply(this, [{ add: add, remove: remove },speed,easing,callback]);
@@ -190,7 +199,7 @@ $.fn.extend({
 	switchClass: function() {
 		return this.morph.apply(this, arguments);
 	},
-	
+
 	// helper functions
 	cssUnit: function(key) {
 		var style = this.css(key), val = [];
@@ -337,7 +346,7 @@ var colors = {
  *
  * Open source under the BSD License.
  *
- * Copyright © 2008 George McGinley Smith
+ * Copyright 2008 George McGinley Smith
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -506,7 +515,7 @@ $.extend($.easing,
  *
  * Open source under the BSD License.
  *
- * Copyright © 2001 Robert Penner
+ * Copyright 2001 Robert Penner
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,

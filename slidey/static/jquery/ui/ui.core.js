@@ -1,5 +1,5 @@
 /*
- * jQuery UI 1.6rc5
+ * jQuery UI 1.6rc6
  *
  * Copyright (c) 2009 AUTHORS.txt (http://ui.jquery.com/about)
  * Dual licensed under the MIT (MIT-LICENSE.txt)
@@ -14,7 +14,7 @@ var _remove = $.fn.remove,
 
 //Helper functions and ui object
 $.ui = {
-	version: "1.6rc5",
+	version: "1.6rc6",
 
 	// $.ui.plugin is deprecated.  Use the proxy pattern instead.
 	plugin: {
@@ -199,30 +199,22 @@ $.extend($.expr[':'], {
 		return !!$.data(elem, match[3]);
 	},
 
-	// TODO: add support for object, area
-	tabbable: function(elem) {
-		var nodeName = elem.nodeName.toLowerCase();
-		function isVisible(element) {
-			return !($(element).is(':hidden') || $(element).parents(':hidden').length);
-		}
+	focusable: function(element) {
+		var nodeName = element.nodeName.toLowerCase(),
+			tabIndex = $.attr(element, 'tabindex');
+		return (/input|select|textarea|button|object/.test(nodeName)
+			? !element.disabled
+			: 'a' == nodeName || 'area' == nodeName
+				? element.href || !isNaN(tabIndex)
+				: !isNaN(tabIndex))
+			// the element and all of its ancestors must be visible
+			// the browser may report that the area is hidden
+			&& !$(element)['area' == nodeName ? 'parents' : 'closest'](':hidden').length;
+	},
 
-		return (
-			// in tab order
-			elem.tabIndex >= 0 &&
-
-			( // filter node types that participate in the tab order
-
-				// anchor tag
-				('a' == nodeName && elem.href) ||
-
-				// enabled form element
-				(/input|select|textarea|button/.test(nodeName) &&
-					'hidden' != elem.type && !elem.disabled)
-			) &&
-
-			// visible on page
-			isVisible(elem)
-		);
+	tabbable: function(element) {
+		var tabIndex = $.attr(element, 'tabindex');
+		return (isNaN(tabIndex) || tabIndex >= 0) && $(element).is(':focusable');
 	}
 });
 
@@ -269,7 +261,7 @@ $.widget = function(name, prototype) {
 
 			// constructor
 			(!instance && !isMethodCall &&
-				$.data(this, name, new $[namespace][name](this, options)));
+				$.data(this, name, new $[namespace][name](this, options))._init());
 
 			// method call
 			(instance && isMethodCall && $.isFunction(instance[options]) &&
@@ -307,8 +299,6 @@ $.widget = function(name, prototype) {
 			.bind('remove', function() {
 				return self.destroy();
 			});
-
-		this._init();
 	};
 
 	// add widget prototype
@@ -373,6 +363,16 @@ $.widget.prototype = {
 		event = $.Event(event);
 		event.type = eventName;
 
+		// copy original event properties over to the new event
+		// this would happen if we could call $.event.fix instead of $.Event
+		// but we don't have a way to force an event to be fixed multiple times
+		if (event.originalEvent) {
+			for (var i = $.event.props.length, prop; i;) {
+				prop = $.event.props[--i];
+				event[prop] = event.originalEvent[prop];
+			}
+		}
+
 		this.element.trigger(event, data);
 
 		return !($.isFunction(callback) && callback.call(this.element[0], event, data) === false
@@ -422,6 +422,9 @@ $.ui.mouse = {
 	},
 
 	_mouseDown: function(event) {
+		// don't let more than one widget handle mouseStart
+		if (event.originalEvent.mouseHandled) { return; }
+
 		// we may have missed mouseup (out of window)
 		(this._mouseStarted && this._mouseUp(event));
 
@@ -464,7 +467,8 @@ $.ui.mouse = {
 		// however, in Safari, this causes select boxes not to be selectable
 		// anymore, so this fix is needed
 		($.browser.safari || event.preventDefault());
-		
+
+		event.originalEvent.mouseHandled = true;
 		return true;
 	},
 

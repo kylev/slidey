@@ -10,27 +10,27 @@ jQuery.ui.accordion.defaults.animated = false;
 function state(accordion) {
 	var args = $.makeArray(arguments).slice(1);
 	$.each(args, function(i, n) {
-		equals(accordion.find(".ui-accordion-content").parent().eq(i).is(":visible"), n);
+		equals(accordion.find(".ui-accordion-content").eq(i).is(":visible"), n);
 	});
 }
 
 $.fn.triggerEvent = function(type, target) {
 	return this.triggerHandler(type, [jQuery.event.fix({ type: type, target: target })]);
-}
+};
 
 test("basics", function() {
 	state($('#list1').accordion(), 1, 0, 0);
 });
 
-test("autoheight", function() {
+test("autoHeight", function() {
 	$('#navigation').accordion({ autoHeight: false });
-	equals( 90, $('#navigation div:first').height() );
-	equals( 126, $('#navigation div:eq(1)').height() );
-	equals( 54, $('#navigation div:last').height() );
+	equals( $('#navigation > li:eq(0) > ul').height(), 80 );
+	equals( $('#navigation > li:eq(1) > ul').height(), 112 );
+	equals( $('#navigation > li:eq(2) > ul').height(), 48 );
 	$('#navigation').accordion("destroy").accordion({ autoHeight: true });
-	equals( 126, $('#navigation div:first').height() );
-	equals( 126, $('#navigation div:eq(1)').height() );
-	equals( 126, $('#navigation div:last').height() );
+	equals( $('#navigation > li:eq(0) > ul').height(), 112 );
+	equals( $('#navigation > li:eq(1) > ul').height(), 112 );
+	equals( $('#navigation > li:eq(2) > ul').height(), 112 );
 });
 
 test("activate, numeric", function() {
@@ -94,7 +94,7 @@ function state2(accordion) {
 }
 
 test("handle click on header-descendant", function() {
-	var ac = $('#navigation').accordion({ autoHeight: false })
+	var ac = $('#navigation').accordion({ autoHeight: false });
 	ac.triggerEvent("click", $('#navigation span:contains(Bass)')[0]);
 	state2(ac, 0, 1, 0);
 });
@@ -114,17 +114,17 @@ test("accordionchange event, open closed and close again", function() {
 		alwaysOpen: false
 	})
 	.one("accordionchange", function(event, ui) {
-		equals( ui.oldHeader.size(), 0 )
-		equals( ui.oldContent.size(), 0 )
-		equals( ui.newHeader.size(), 1 )
-		equals( ui.newContent.size(), 1 )
+		equals( ui.oldHeader.size(), 0 );
+		equals( ui.oldContent.size(), 0 );
+		equals( ui.newHeader.size(), 1 );
+		equals( ui.newContent.size(), 1 );
 	})
 	.accordion("activate", 0)
 	.one("accordionchange", function(event, ui) {
-		equals( ui.oldHeader.size(), 1 )
-		equals( ui.oldContent.size(), 1 )
-		equals( ui.newHeader.size(), 0 )
-		equals( ui.newContent.size(), 0 )
+		equals( ui.oldHeader.size(), 1 );
+		equals( ui.oldContent.size(), 1 );
+		equals( ui.newHeader.size(), 0 );
+		equals( ui.newContent.size(), 0 );
 	})
 	.accordion("activate", 0);
 });

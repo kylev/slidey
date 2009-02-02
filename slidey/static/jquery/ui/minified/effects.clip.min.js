@@ -1,5 +1,5 @@
 /*
- * jQuery UI Effects Clip 1.6rc5
+ * jQuery UI Effects Clip 1.6rc6
  *
  * Copyright (c) 2009 AUTHORS.txt (http://ui.jquery.com/about)
  * Dual licensed under the MIT (MIT-LICENSE.txt)

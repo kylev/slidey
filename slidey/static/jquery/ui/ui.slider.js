@@ -1,5 +1,5 @@
 /*
- * jQuery UI Slider 1.6rc5
+ * jQuery UI Slider 1.6rc6
  *
  * Copyright (c) 2009 AUTHORS.txt (http://ui.jquery.com/about)
  * Dual licensed under the MIT (MIT-LICENSE.txt)
@@ -20,8 +20,7 @@ $.widget("ui.slider", $.extend({}, $.ui.mouse, {
 		var self = this, o = this.options;
 		this._keySliding = false;
 		this._handleIndex = null;
-		this.orientation = o.orientation == 'auto' ? (this.element[0].offsetWidth/this.element[0].offsetHeight > 1 ? 'horizontal' : 'vertical') : o.orientation;
-
+		this._detectOrientation();
 		this._mouseInit();
 
 		this.element
@@ -34,7 +33,7 @@ $.widget("ui.slider", $.extend({}, $.ui.mouse, {
 		this.range = $([]);
 
 		if (o.range) {
-			
+
 			if (o.range === true) {
 				this.range = $('<div></div>');
 				if (!o.values) o.values = [this._valueMin(), this._valueMin()];
@@ -54,7 +53,7 @@ $.widget("ui.slider", $.extend({}, $.ui.mouse, {
 			(o.range == "max") && (this.orientation == "horizontal") && this.range.css({ right : 0 });
 			(o.range == "min") && (this.orientation == "vertical") && this.range.css({ bottom : 0 });
 			(o.range == "max") && (this.orientation == "vertical") && this.range.css({ top : 0 });
-			
+
 		}
 
 		if ($(".ui-slider-handle", this.element).length == 0)
@@ -123,10 +122,12 @@ $.widget("ui.slider", $.extend({}, $.ui.mouse, {
 					break;
 				case $.ui.keyCode.UP:
 				case $.ui.keyCode.RIGHT:
+					if(curVal == self._valueMax()) return;
 					newVal = curVal + step;
 					break;
 				case $.ui.keyCode.DOWN:
 				case $.ui.keyCode.LEFT:
+					if(curVal == self._valueMin()) return;
 					newVal = curVal - step;
 					break;
 			}
@@ -185,7 +186,7 @@ $.widget("ui.slider", $.extend({}, $.ui.mouse, {
 		var position = { x: event.pageX, y: event.pageY };
 		var normValue = this._normValueFromMouse(position);
 
-		var distance = this._valueMax(), closestHandle;
+		var distance = this._valueMax() + 1, closestHandle;
 		var self = this, index;
 		this.handles.each(function(i) {
 			var thisDistance = Math.abs(normValue - self.values(i));
@@ -195,15 +196,28 @@ $.widget("ui.slider", $.extend({}, $.ui.mouse, {
 				index = i;
 			}
 		});
+		
+		// workaround for bug #3736 (if both handles of a range are at 0, the first is always used as the one with least distance,
+		// and moving it is obviously prevented by preventing negative ranges)
+		if(o.range && (this.values(0) + this.values(1)) == 0) {
+			closestHandle = $(this.handles[++index]);
+		}
 
 		self._handleIndex = index;
 
 		closestHandle
 			.addClass("ui-state-active")
 			.focus();
+		
+		var offset = closestHandle.offset();
+		var mouseOverHandle = !$(event.target).parents().andSelf().is('.ui-slider-handle');
+		this._clickOffset = mouseOverHandle ? { left: 0, top: 0 } : {
+			left: event.pageX - offset.left + (parseInt(closestHandle.css('marginLeft'),10) || 0),
+			top: event.pageY - offset.top + (parseInt(closestHandle.css('marginTop'),10) || 0)
+		};
 
+		normValue = this._normValueFromMouse(position);
 		this._slide(event, index, normValue);
-
 		return true;
 
 	},
@@ -213,25 +227,30 @@ $.widget("ui.slider", $.extend({}, $.ui.mouse, {
 	},
 
 	_mouseDrag: function(event) {
-		
+
 		var position = { x: event.pageX, y: event.pageY };
 		var normValue = this._normValueFromMouse(position);
-
+		
 		this._slide(event, this._handleIndex, normValue);
 
 		return false;
-		
+
 	},
 
 	_mouseStop: function(event) {
-		
+
 		this.handles.removeClass("ui-state-active");
 		this._stop(event);
 		this._change(event);
 		this._handleIndex = null;
+		this._clickOffset = null;
 
 		return false;
-		
+
+	},
+	
+	_detectOrientation: function() {
+		this.orientation = this.options.orientation == 'auto' ? (this.element[0].offsetWidth/this.element[0].offsetHeight > 1 ? 'horizontal' : 'vertical') : this.options.orientation;
 	},
 
 	_normValueFromMouse: function(position) {
@@ -239,10 +258,10 @@ $.widget("ui.slider", $.extend({}, $.ui.mouse, {
 		var pixelTotal, pixelMouse;
 		if ('horizontal' == this.orientation) {
 			pixelTotal = this.elementSize.width;
-			pixelMouse = position.x - this.elementOffset.left;
+			pixelMouse = position.x - this.elementOffset.left - (this._clickOffset ? this._clickOffset.left : 0);
 		} else {
 			pixelTotal = this.elementSize.height;
-			pixelMouse = position.y - this.elementOffset.top;
+			pixelMouse = position.y - this.elementOffset.top - (this._clickOffset ? this._clickOffset.top : 0);
 		}
 
 		var percentMouse = (pixelMouse / pixelTotal);
@@ -260,7 +279,7 @@ $.widget("ui.slider", $.extend({}, $.ui.mouse, {
 			normValue += this.options.step;
 
 		return normValue;
-		
+
 	},
 
 	_start: function(event) {
@@ -270,10 +289,11 @@ $.widget("ui.slider", $.extend({}, $.ui.mouse, {
 	},
 
 	_slide: function(event, index, newVal) {
-		
+
+		var handle = this.handles[index];
+
 		if (this.options.values && this.options.values.length) {
 
-			var handle = this.handles[index];
 			var otherVal = this.values(index ? 0 : 1);
 
 			if ((index == 0 && newVal >= otherVal) || (index == 1 && newVal <= otherVal))
@@ -290,7 +310,7 @@ $.widget("ui.slider", $.extend({}, $.ui.mouse, {
 				});
 				var otherVal = this.values(index ? 0 : 1);
 				if (allowed !== false) {
-					this.values(index, newVal);
+					this.values(index, newVal, !( event.type == 'mousedown' && this.options.animate ));
 				}
 			}
 
@@ -299,10 +319,13 @@ $.widget("ui.slider", $.extend({}, $.ui.mouse, {
 			if (newVal != this.value()) {
 				// A slide can be canceled by returning false from the slide callback
 				var allowed = this._trigger("slide", event, {
+					handle: handle,
 					value: newVal
 				});
-				if (allowed !== false)
-					this._setData('value', newVal);
+				if (allowed !== false) {
+					this._setData('value', newVal, ( event.type == 'mousedown' && this.options.animate ));
+				}
+					
 			}
 
 		}
@@ -332,11 +355,13 @@ $.widget("ui.slider", $.extend({}, $.ui.mouse, {
 
 	},
 
-	values: function(index, newValue) {
+	values: function(index, newValue, noAnimation) {
+
+		if(!this.options.animate) noAnimation = true;
 
 		if (arguments.length > 1) {
 			this.options.values[index] = newValue;
-			this._refreshValue();
+			this._refreshValue(!noAnimation);
 			this._change();
 		}
 
@@ -359,11 +384,11 @@ $.widget("ui.slider", $.extend({}, $.ui.mouse, {
 		switch (key) {
 			case 'orientation':
 
-				this.orientation = this.options.orientation == 'auto' ? (this.element[0].offsetWidth/this.element[0].offsetHeight > 1 ? 'horizontal' : 'vertical') : this.options.orientation;
-
+				this._detectOrientation();
+				
 				this.element
 					.removeClass("ui-slider-horizontal ui-slider-vertical")
-					.addClass("ui-slider-" + this._orientation());
+					.addClass("ui-slider-" + this.orientation);
 				this._refreshValue();
 				break;
 			case 'value':
@@ -412,34 +437,36 @@ $.widget("ui.slider", $.extend({}, $.ui.mouse, {
 		return valueMax;
 	},
 
-	_refreshValue: function() {
+	_refreshValue: function(animate) {
 
-		var oRange = this.options.range;
+		var oRange = this.options.range, o = this.options, self = this;
 
 		if (this.options.values && this.options.values.length) {
-			var self = this, vp0, vp1;
+			var vp0, vp1;
 			this.handles.each(function(i, j) {
 				var valPercent = (self.values(i) - self._valueMin()) / (self._valueMax() - self._valueMin()) * 100;
-				$(this).css(self.orientation == 'horizontal' ? 'left' : 'bottom', valPercent + '%');
+				var _set = {}; _set[self.orientation == 'horizontal' ? 'left' : 'bottom'] = valPercent + '%';
+				$(this).stop(1,1)[animate ? 'animate' : 'css'](_set, o.animate);
 				if (self.options.range === true) {
 					if (self.orientation == 'horizontal') {
-						(i == 0) && self.range.css('left', valPercent + '%');
-						(i == 1) && self.range.css('width', (valPercent - lastValPercent) + '%');
+						(i == 0) && self.range.stop(1,1)[animate ? 'animate' : 'css']({ left: valPercent + '%' }, o.animate);
+						(i == 1) && self.range[animate ? 'animate' : 'css']({ width: (valPercent - lastValPercent) + '%' }, { queue: false, duration: o.animate });
 					} else {
-						(i == 0) && self.range.css('bottom', (valPercent) + '%');
-						(i == 1) && self.range.css('height', (valPercent - lastValPercent) + '%');
+						(i == 0) && self.range.stop(1,1)[animate ? 'animate' : 'css']({ bottom: (valPercent) + '%' }, o.animate);
+						(i == 1) && self.range[animate ? 'animate' : 'css']({ height: (valPercent - lastValPercent) + '%' }, { queue: false, duration: o.animate });
 					}
 				}
 				lastValPercent = valPercent;
 			});
 		} else {
 			var valPercent = (this.value() - this._valueMin()) / (this._valueMax() - this._valueMin()) * 100;
-			this.handle.css(this.orientation == 'horizontal' ? 'left' : 'bottom', valPercent + '%');
+			var _set = {}; _set[self.orientation == 'horizontal' ? 'left' : 'bottom'] = valPercent + '%';
+			this.handle.stop(1,1)[animate ? 'animate' : 'css'](_set, o.animate);
 
-			(oRange == "min") && (this.orientation == "horizontal") && this.range.css({ left: 0, width: valPercent + '%' });
-			(oRange == "max") && (this.orientation == "horizontal") && this.range.css({ left: valPercent + '%', width: (100 - valPercent) + '%' });
-			(oRange == "min") && (this.orientation == "vertical") && this.range.css({ top: (100 - valPercent) + '%', height: valPercent + '%' });
-			(oRange == "max") && (this.orientation == "vertical") && this.range.css({ bottom: valPercent + '%', height: (100 - valPercent) + '%' });
+			(oRange == "min") && (this.orientation == "horizontal") && this.range.stop(1,1)[animate ? 'animate' : 'css']({ left: 0, width: valPercent + '%' }, o.animate);
+			(oRange == "max") && (this.orientation == "horizontal") && this.range[animate ? 'animate' : 'css']({ left: valPercent + '%', width: (100 - valPercent) + '%' }, { queue: false, duration: o.animate });
+			(oRange == "min") && (this.orientation == "vertical") && this.range.stop(1,1)[animate ? 'animate' : 'css']({ top: (100 - valPercent) + '%', height: valPercent + '%' }, o.animate);
+			(oRange == "max") && (this.orientation == "vertical") && this.range[animate ? 'animate' : 'css']({ bottom: valPercent + '%', height: (100 - valPercent) + '%' }, { queue: false, duration: o.animate });
 		}
 
 	}
@@ -448,9 +475,10 @@ $.widget("ui.slider", $.extend({}, $.ui.mouse, {
 
 $.extend($.ui.slider, {
 	getter: "value values",
-	version: "1.6rc5",
+	version: "1.6rc6",
 	eventPrefix: "slide",
 	defaults: {
+		animate: false,
 		delay: 0,
 		distance: 0,
 		max: 100,

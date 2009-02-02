@@ -20,7 +20,6 @@ var defaults = {
 	minHeight: 150,
 	minWidth: 150,
 	modal: false,
-	overlay: {},
 	position: 'center',
 	resizable: true,
 	stack: true,
@@ -455,10 +454,6 @@ test("minWidth", function() {
 });
 
 test("modal", function() {
-	ok(false, "missing test");
-});
-
-test("overlay", function() {
 	ok(false, "missing test");
 });
 
