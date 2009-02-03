@@ -3,7 +3,7 @@
 <head>
 	<title>jQuery UI Draggable - Handles</title>
 	<link type="text/css" href="../../themes/base/ui.all.css" rel="stylesheet" />
-	<script type="text/javascript" src="../../jquery-1.3.js"></script>
+	<script type="text/javascript" src="../../jquery-1.3.1.js"></script>
 	<script type="text/javascript" src="../../ui/ui.core.js"></script>
 	<script type="text/javascript" src="../../ui/ui.draggable.js"></script>
 	<link type="text/css" href="../demos.css" rel="stylesheet" />
@@ -15,6 +15,7 @@
 	$(function() {
 		$("#draggable").draggable({ handle: 'p' });
 		$("#draggable2").draggable({ cancel: "p.ui-widget-header" });
+		$("div, p").disableSelection();
 	});
 	</script>
 </head>
@@ -36,8 +37,8 @@
 
 <div class="demo-description">
 
-<p>Allow dragging only when the cursor is over a specific part of the draggable.  Use the <strong>handle</strong> option to specify the jQuery selector of an element (or group of elements) used to drag the object.</p>
-<p>Or prevent dragging when the cursor is over a specific element (or group of elements) within the draggable.  Use the <strong>cancel</strong> option to specify a jQuery selector over which to "cancel" draggable functionality.</p>
+<p>Allow dragging only when the cursor is over a specific part of the draggable.  Use the <code>handle</code> option to specify the jQuery selector of an element (or group of elements) used to drag the object.</p>
+<p>Or prevent dragging when the cursor is over a specific element (or group of elements) within the draggable.  Use the <code>cancel</code> option to specify a jQuery selector over which to "cancel" draggable functionality.</p>
 
 </div><!-- End demo-description -->
 </body>

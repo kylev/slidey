@@ -1,5 +1,5 @@
 /*
- * jQuery UI Progressbar 1.6rc5
+ * jQuery UI Progressbar 1.6rc6
  *
  * Copyright (c) 2009 AUTHORS.txt (http://ui.jquery.com/about)
  * Dual licensed under the MIT (MIT-LICENSE.txt)
@@ -105,7 +105,7 @@ $.widget("ui.progressbar", {
 });
 
 $.extend($.ui.progressbar, {
-	version: "1.6rc5",
+	version: "1.6rc6",
 	defaults: {
 		value: 0
 	}

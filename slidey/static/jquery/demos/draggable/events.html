@@ -3,13 +3,13 @@
 <head>
 	<title>jQuery UI Draggable - Events</title>
 	<link type="text/css" href="../../themes/base/ui.all.css" rel="stylesheet" />
-	<script type="text/javascript" src="../../jquery-1.3.js"></script>
+	<script type="text/javascript" src="../../jquery-1.3.1.js"></script>
 	<script type="text/javascript" src="../../ui/ui.core.js"></script>
 	<script type="text/javascript" src="../../ui/ui.draggable.js"></script>
 	<link type="text/css" href="../demos.css" rel="stylesheet" />
 	<style type="text/css">
 		#draggable { width: 16em; padding: 0 1em; }
-		#draggable ul li { margin: 1em 0; padding: 0.5em 0; }
+		#draggable ul li { margin: 1em 0; padding: 0.5em 0; } * html #draggable ul li { height: 1%; }
 		#draggable ul li span.ui-icon { float: left; }
 		#draggable ul li span.count { font-weight: bold; }
 	</style>
@@ -65,7 +65,7 @@
 <div class="demo-description">
 
 <p>
-Layer functionality onto the draggable using the <strong>start</strong>, <strong>drag</strong>, and <strong>stop</strong> events.  Start is fired at the start of the drag; drag during the drag; and stop when dragging stops.
+Layer functionality onto the draggable using the <code>start</code>, <code>drag</code>, and <code>stop</code> events.  Start is fired at the start of the drag; drag during the drag; and stop when dragging stops.
 </p>
 
 </div><!-- End demo-description -->

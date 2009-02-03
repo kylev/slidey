@@ -11,18 +11,11 @@ var defaults = {
 	cache: false,
 	cookie: null,
 	deselectable: false,
-	deselectableClass: 'ui-tabs-deselectable',
 	disabled: [],
-	disabledClass: 'ui-state-disabled',
 	event: 'click',
 	fx: null,
-	hideClass: 'ui-tabs-hide',
 	idPrefix: 'ui-tabs-',
-	loadingClass: 'ui-tabs-loading',
-	navClass: 'ui-tabs-nav ui-helper-reset ui-helper-clearfix ui-widget-header ui-corner-all',
-	panelClass: 'ui-tabs-panel ui-widget-content ui-corner-bottom',
 	panelTemplate: '<div></div>',
-	selectedClass: 'ui-tabs-selected ui-state-active',
 	spinner: 'Loading&#8230;',
 	tabTemplate: '<li><a href="#{href}"><span>#{label}</span></a></li>'
 };
@@ -45,24 +38,31 @@ module('tabs');
 	test('init', function() {
 		expect(9);
 
-		var el = $('#tabs1').tabs(); // new markup requires to tabify wrapper again...
-		ok(true, '.tabs() called on element');
-
-		el.tabs('destroy').tabs({ selected: 1 });
+		var el = $('#tabs1').tabs();
 		
+		ok(true, '.tabs() called on element');
 		ok( el.is('.ui-tabs.ui-widget.ui-widget-content.ui-corner-all'), 'attach classes to container');
 		ok( $('ul', el).is('.ui-tabs-nav.ui-helper-reset.ui-helper-clearfix.ui-widget-header.ui-corner-all'), 'attach classes to list' );
 		ok( $('div:eq(0)', el).is('.ui-tabs-panel.ui-widget-content.ui-corner-bottom'), 'attach classes to panel' );
-		ok( $('li:eq(0)', el).is('.ui-state-default.ui-corner-top'), 'attach classes to inactive li');
-		ok( $('li:eq(1)', el).is('.ui-tabs-selected.ui-state-active.ui-corner-top'), 'attach classes to active li');
-		equals( el.data('selected.tabs'), 1, 'selected.tabs set' );
-		equals( $('li', el).index( $('li.ui-tabs-selected', el) ), 1, 'second tab active');
-		equals( $('div', el).index( $('div.ui-tabs-hide', '#tabs1') ), 0, 'first panel should be hidden' );
+		ok( $('li:eq(0)', el).is('.ui-tabs-selected.ui-state-active.ui-corner-top'), 'attach classes to active li');
+		ok( $('li:eq(1)', el).is('.ui-state-default.ui-corner-top'), 'attach classes to inactive li');
+		equals( el.data('selected.tabs'), 0, 'selected.tabs set' );
+		equals( $('li', el).index( $('li.ui-tabs-selected', el) ), 0, 'second tab active');
+		equals( $('div', el).index( $('div.ui-tabs-hide', '#tabs1') ), 1, 'second panel should be hidden' );
 
 	});
 
 	test('destroy', function() {
-		expect(0);
+		expect(5);
+		
+		var el = $('#tabs1').tabs();
+		el.tabs('destroy');
+		
+		ok( el.is(':not(.ui-tabs, .ui-widget, .ui-widget-content, .ui-corner-all)'), 'remove classes from container');
+		ok( $('ul', el).is(':not(.ui-tabs-nav, .ui-helper-reset, .ui-helper-clearfix, .ui-widget-header, .ui-corner-all)'), 'remove classes from list' );
+		ok( $('div:eq(1)', el).is(':not(.ui-tabs-panel, .ui-widget-content, .ui-corner-bottom, .ui-tabs-hide)'), 'remove classes to panel' );
+		ok( $('li:eq(0)', el).is(':not(.ui-tabs-selected, .ui-state-active, .ui-corner-top)'), 'remove classes from active li');	
+		ok( $('li:eq(1)', el).is(':not(.ui-state-default, .ui-corner-top)'), 'remove classes from inactive li');
 
 	});
 
@@ -83,7 +83,8 @@ module('tabs');
 	test('remove', function() {
 		expect(4);
 
-		var el = $('#tabs1 > ul').tabs();
+		var el = $('#tabs1').tabs();
+		
 		el.tabs('remove', 0);
 		equals(el.tabs('length'), 2, 'remove tab');
 		equals($('li a[href$="fragment-1"]', el).length, 0, 'remove associated list item');
@@ -92,10 +93,9 @@ module('tabs');
 		// TODO delete tab -> focus tab to right
 		// TODO delete last tab -> focus tab to left
 		
-		el = $('#tabs2 > ul').tabs({ selected: 1 });
+		el.tabs('select', 1);
 		el.tabs('remove', 1);
-		equals(el.data('selected.tabs'), 0, 'update selected property');
-		
+		equals(el.data('selected.tabs'), 0, 'update selected property');		
 	});
 
 	test('enable', function() {
@@ -123,21 +123,55 @@ module('tabs');
 
 	});
 
-
-module('tabs: Options');
-
-	test('select: null', function() {
+	test('callback ui object', function() {
 		expect(3);
 
-		var el = $('#tabs1 > ul');
+		var uiObj;
+		$('#tabs1').tabs({
+			show: function(event, ui) {
+				uiObj = ui;
+			}
+		});
+		equals(uiObj.tab, $('#tabs1 a')[0], 'should have tab as DOM anchor element');
+		equals(uiObj.panel, $('#tabs1 div')[0], 'should have panel as DOM div element');
+		equals(uiObj.index, 0, ' should have index');
+		
+	});
+	
+	test('selected property', function() {
+		expect(5);
+		
+		$('#tabs1').tabs();
+		equals($('#tabs1').data('selected.tabs'), 0, 'selected should be 0 by default');
+		
+		reset();
+		$('#tabs1').tabs({ selected: null });
+		equals($('#tabs1').data('selected.tabs'), -1, 'selected should be -1 for all tabs unselected');
+		
+		reset();
+		$('#tabs1').tabs({ selected: -1 });
+		equals($('#tabs1').data('selected.tabs'), -1, 'selected should be -1 for all tabs unselected');
+		
+		reset();
+		$('#tabs1').tabs({ selected: 1 });
+		equals($('#tabs1').data('selected.tabs'), 1, 'selected should be specified tab');
+		
+		reset();
+		$('#tabs1').tabs({ selected: 8 });
+		equals($('#tabs1').data('selected.tabs'), 0, 'selected should default to zero if given value is out of index');
+		
+	});
+	
+module('tabs: Options');
+
+	test('selected: null', function() {
+		expect(2);
+
+		var el = $('#tabs1');
 
 		el.tabs({ selected: null });
-		equals( el.data('selected.tabs'), null, 'option set' );
-		equals( $('li.ui-tabs-selected', el).length, 0, 'all tabs should be deselected' );
+		equals( $('li.ui-tabs-selected', el).length, 0, 'no tab should be selected' );
 		equals( $('div.ui-tabs-hide', '#tabs1').length, 3, 'all panels should be hidden' );
-
-		// TODO select == null with cookie
-		// TODO select == null with select method
 
 	});
 
@@ -164,7 +198,7 @@ module('tabs: Options');
 	});
 
 	test('cookie', function() {
-		expect(5);
+		expect(6);
 
 		var el = $('#tabs1 > ul');
 		var cookieName = 'ui-tabs-' + $.data(el[0]);
@@ -189,6 +223,11 @@ module('tabs: Options');
 		equals(cookie(), 1, 'initial cookie value, from existing cookie');
 
 		el.tabs('destroy');
+		el.tabs({ cookie: {}, deselectable: true });
+		el.tabs('select', 0);
+		equals(cookie(), -1, 'cookie value for all unselected tabs');
+		
+		el.tabs('destroy');
 		ok($.cookie(cookieName) === null, 'erase cookie after destroy');
 
 	});
@@ -196,7 +235,7 @@ module('tabs: Options');
 
 module('tabs: Tickets');
 
-	test('id containing colon, #????', function() {
+	test('id containing colon, #2715', function() { // http://ui.jquery.com/bugs/ticket/2715
 		expect(4);
 
 		var el = $('#tabs2 > ul').tabs();
@@ -219,7 +258,7 @@ module('tabs: Tickets');
 		};
 		var expected = inlineStyle('height');
 
-		var el = $('#tabs2 > ul').tabs();
+		var el = $('#tabs2').tabs();
 		equals(inlineStyle('height'), expected, 'init should not remove inline style');
 
 		el.tabs('select', 1);
@@ -232,6 +271,15 @@ module('tabs: Tickets');
 			});
 
 		});
+
+	});
+	
+	test('Ajax tab with url containing a fragment identifier fails to load, #3627', function() { // http://ui.jquery.com/bugs/ticket/3627
+		expect(1);
+
+		var el = $('#tabs2').tabs();
+		
+		equals( $('a:eq(2)', el).data('load.tabs'), 'test.html', 'should ignore fragment identifier' );
 
 	});
 

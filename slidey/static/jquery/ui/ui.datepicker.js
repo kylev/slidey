@@ -1,5 +1,5 @@
 /*
- * jQuery UI Datepicker 1.6rc5
+ * jQuery UI Datepicker 1.6rc6
  *
  * Copyright (c) 2009 AUTHORS.txt (http://ui.jquery.com/about)
  * Dual licensed under the MIT (MIT-LICENSE.txt)
@@ -13,7 +13,7 @@
 
 (function($) { // hide the namespace
 
-$.extend($.ui, { datepicker: { version: "1.6rc5" } });
+$.extend($.ui, { datepicker: { version: "1.6rc6" } });
 
 var PROP_NAME = 'datepicker';
 
@@ -610,26 +610,26 @@ $.extend(Datepicker.prototype, {
 		if (inst.input && inst.input[0].type != 'hidden' && inst == $.datepicker._curInst)
 			$(inst.input[0]).focus();
 	},
-	
+
 	/* Check positioning to remain on screen. */
-	_checkOffset: function(inst, offset, isFixed) {		
+	_checkOffset: function(inst, offset, isFixed) {
 		var dpWidth = inst.dpDiv.outerWidth();
 		var dpHeight = inst.dpDiv.outerHeight();
 		var inputWidth = inst.input ? inst.input.outerWidth() : 0;
 		var inputHeight = inst.input ? inst.input.outerHeight() : 0;
-		var viewWidth = window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth;
-		var viewHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-		
+		var viewWidth = (window.innerWidth || document.documentElement.clientWidth || document.body.clientWidth) + $(document).scrollLeft();
+		var viewHeight = (window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight) + $(document).scrollTop();
+
 		offset.left -= (this._get(inst, 'isRTL') ? (dpWidth - inputWidth) : 0);
 		offset.left -= (isFixed && offset.left == inst.input.offset().left) ? $(document).scrollLeft() : 0;
 		offset.top -= (isFixed && offset.top == (inst.input.offset().top + inputHeight)) ? $(document).scrollTop() : 0;
-		
-		// now check if datepicker is showing outside window viewpoint - move to a better place if so.
+
+		// now check if datepicker is showing outside window viewport - move to a better place if so.
 		offset.left -= (offset.left + dpWidth > viewWidth && viewWidth > dpWidth) ? Math.abs(offset.left + dpWidth - viewWidth) : 0;
 		offset.top -= (offset.top + dpHeight > viewHeight && viewHeight > dpHeight) ? Math.abs(offset.top + dpHeight + inputHeight*2 - viewHeight) : 0;
-				
+
 		return offset;
-	},	
+	},
 
 	/* Find an object's position on the screen. */
 	_findPos: function(obj) {
@@ -707,7 +707,9 @@ $.extend(Datepicker.prototype, {
 		if (this._isDisabledDatepicker(target[0])) {
 			return;
 		}
-		this._adjustInstDate(inst, offset, period);
+		this._adjustInstDate(inst, offset +
+			(period == 'M' ? this._get(inst, 'showCurrentAtPos') : 0), // undo positioning
+			period);
 		this._updateDatepicker(inst);
 	},
 
@@ -1283,6 +1285,8 @@ $.extend(Datepicker.prototype, {
 				}
 			}
 		}
+		inst.drawMonth = drawMonth;
+		inst.drawYear = drawYear;
 		var prevText = this._get(inst, 'prevText');
 		prevText = (!navigationAsDateFormat ? prevText : this.formatDate(prevText,
 			this._daylightSavingAdjust(new Date(drawYear, drawMonth - stepMonths, 1)),
@@ -1450,9 +1454,8 @@ $.extend(Datepicker.prototype, {
 				year = drawYear - 10;
 				endYear = drawYear + 10;
 			} else if (years[0].charAt(0) == '+' || years[0].charAt(0) == '-') {
-				year = endYear = new Date().getFullYear();
-				year += parseInt(years[0], 10);
-				endYear += parseInt(years[1], 10);
+				year = drawYear + parseInt(years[0], 10);
+				endYear = drawYear + parseInt(years[1], 10);
 			} else {
 				year = parseInt(years[0], 10);
 				endYear = parseInt(years[1], 10);
@@ -1594,8 +1597,8 @@ $.fn.datepicker = function(options){
 
 	/* Initialise the date picker. */
 	if (!$.datepicker.initialized) {
-		$(document.body).append($.datepicker.dpDiv).
-			mousedown($.datepicker._checkExternalClick);
+		$(document).mousedown($.datepicker._checkExternalClick).
+			find('body').append($.datepicker.dpDiv);
 		$.datepicker.initialized = true;
 	}
 
@@ -1614,6 +1617,6 @@ $.fn.datepicker = function(options){
 $.datepicker = new Datepicker(); // singleton instance
 $.datepicker.initialized = false;
 $.datepicker.uuid = new Date().getTime();
-$.datepicker.version = "1.6rc5";
+$.datepicker.version = "1.6rc6";
 
 })(jQuery);
