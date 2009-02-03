@@ -34,11 +34,6 @@ def show(request, show_id):
     return render_to_response('show_frameset.html', {'show_id': show_id})
 
 
-def show_control(request, show_id):
-    """Controller frame contents."""
-    return render_to_response('show_control.html', {'show_id': show_id})
-
-
 def do_login(request):
     if request.method == 'POST':
         form = AuthenticationForm(data=request.POST)
