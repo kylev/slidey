@@ -14,7 +14,6 @@ class DisplayItem(models.Model):
     slide_show = models.ForeignKey(SlideShow)
     item_name = models.CharField(max_length=40, unique=True)
     url = models.URLField()
-    is_public = models.BooleanField(default=True)
 
     def __unicode__(self):
         return "%s (%s)" % (self.item_name, self.url)
