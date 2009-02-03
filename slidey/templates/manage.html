@@ -4,9 +4,15 @@
 
 {% block pagescript %}
 <script>
-  $(function() {
+  $(document).ready(function(){
     $("#showlist").selectable();
   });
+
+  function got_data(data) {
+    $.each(data, function(i, item) {
+      $("<img/>").attr("src", item["pk"]).appendTo("#itemdisplay");
+    });
+  };
 </script>
 {% endblock %}
 
@@ -15,8 +21,11 @@
 
 <ul id="showlist" style="list-style-type: none; margin: 0; padding: 0; width: 60%;">
 {% for show in show_list %}
-  <li class="ui-widget-content"><a href="{% url slidey-edit show_id=show.id %}">{{ show.show_name }}</a>
+  <li class="ui-widget-content"  onclick="$.getJSON('{% url slidey-showcont show_id=show.id %}', got_data);">
+    {{ show.show_name }}
     <a href="../{{ show.id }}/">Launch</a></li>
 {% endfor %}
 </ul>
+<div id="itemdisplay"></div>
 {% endblock %}
+
