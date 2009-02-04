@@ -4,25 +4,28 @@
 
 {% block pagescript %}
 <script type="text/javascript">
-  function got_data(data) {
-    $("#itemdisplay").empty();
-    $.each(data, function(i, item) {
-      $("#itemdisplay").append("<p>" + item["pk"] + "</p>");
-    });
-  };
+$(document).ready(function() {
+    $("#showlist").accordion({
+        active: false,
+        header: "h3",
+        alwaysOpen: false
+     });
+});
 </script>
 {% endblock %}
 
 {% block content %}
 <p>Select a slide show to edit.</p>
 
-<ul id="showlist" style="list-style-type: none; margin: 0; padding: 0; width: 60%;">
+<div id="showlist">
 {% for show in show_list %}
-  <li onclick="$.getJSON('{% url slidey-showcont show_id=show.id %}', got_data);">
-    {{ show.show_name }}
-    <a href="../{{ show.id }}/">Launch</a></li>
+  <div><h3><a href="#">{{ show.show_name }}</a></h3>
+    <div>Content stuff.
+      <a href="../{{ show.id }}/">Launch</a>
+    </div>
+  </div>
 {% endfor %}
-</ul>
+</div>
 <div id="itemdisplay"></div>
 {% endblock %}
 
