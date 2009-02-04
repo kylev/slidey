@@ -1,7 +1,7 @@
 import os
 
 import django.views.static
-from django.contrib.auth import login
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.urlresolvers import reverse
@@ -44,6 +44,12 @@ def do_login(request):
         form = AuthenticationForm(request)
 
     return index(request, form=form)
+
+
+def do_logout(request):
+    """Log the user out and return to the front page."""
+    logout(request)
+    return HttpResponseRedirect(reverse('slidey-index'))
 
 
 @login_required

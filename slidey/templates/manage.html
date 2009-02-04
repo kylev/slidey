@@ -3,19 +3,20 @@
 {% block title %}Manage{% endblock %}
 
 {% block pagescript %}
-<script type="text/javascript">
-$(document).ready(function() {
-    $("#showlist").accordion({
-        active: false,
-        header: "h3",
-        alwaysOpen: false
-     });
-});
-</script>
 {% endblock %}
 
 {% block content %}
 <p>Select a slide show to edit.</p>
+
+<script type="text/javascript">
+$(function() {
+    $("#showlist").accordion({
+        active: false,
+        header: "h3",
+        alwaysOpen: false
+    })
+});
+</script>
 
 <div id="showlist">
 {% for show in show_list %}

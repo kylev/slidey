@@ -22,10 +22,10 @@ $(document).ready(function () {
 {% block content %}
 <div id="tabs">
   <ul>
-    <li><a href="#login"><span>Admin</span></a></li>
+    <li><a href="#admin"><span>Admin</span></a></li>
     <li><a href="#slide-select"><span>Show</span></a></li>
   </ul>
-  <div id="login">
+  <div id="admin">
     {% if form.errors %}
     <p>Your username and password didn't match. Please try again.</p>
     {% endif %}
