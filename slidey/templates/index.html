@@ -3,10 +3,19 @@
 {% block title %}Welcome{% endblock %}
 
 {% block pagescript %}
-<script>
-  $(document).ready(function(){
+<script type="text/javascript">
+$(document).ready(function () {
+    // Turn on the tabbed display
     $("#tabs").tabs();
-  });
+
+    // Register the quick-display change
+    $("#slide-select select").change(function () {
+        var chosen = $("#slide-select option:selected").eq(0).attr("value");
+        if (chosen != 0) {
+            document.location.href += chosen + "/";
+        }
+    });
+});
 </script>
 {% endblock %}
 
@@ -31,12 +40,12 @@
     </form>
   </div>
   <div id="slide-select">
-      <form><select>
-        <option selected="selected">Select a slide show</option>
+      <select>
+        <option value="0" selected="selected">Select a slide show</option>
 {% for show in show_list %}
         <option value="{{ show.id }}">{{ show.show_name }}</option>
 {% endfor %}
-     </select></form>
+     </select>
     </p>
   </div>
 </div>
