@@ -2,7 +2,7 @@ from django.conf.urls.defaults import patterns
 
 
 urlpatterns = patterns(
-    'slideshow.slidey.views',
+    'slidey.slideshow.views',
     (r'^$', 'index', None, 'slidey-index'),
     (r'^static/(?P<path>.*)$', 'static', None, 'slidey-static'),
     (r'^(?P<show_id>\d+)/$', 'show'),

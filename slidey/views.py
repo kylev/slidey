@@ -10,7 +10,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render_to_response
 from django.template import loader
 
-from slideshow.slidey.models import SlideShow, DisplayItem
+from slidey.slideshow.models import SlideShow, DisplayItem
 
 
 STATIC_ROOT = os.path.dirname(os.path.normpath(__file__)) + '/static'
