@@ -1,17 +1,18 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Frameset//EN"
-"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
   <title>Slide Show {{ show_id }}</title>
   <script type="text/javascript" src="{% url slidey-static "jquery/jquery-1.3.1.js" %}"></script>
   <script type="text/javascript" src="{% url slidey-static "slidey.js" %}"></script>
-<script>
+<script type="text/javascript">
 $(document).ready(function(){
-    var show_frame = frames[0]
-    show_frame.location.href = "http://www.kylev.com/";
+    /* Store our display frame */
+    g_show_frame = frames[0];
     $.getJSON('{% url slidey-showcont show_id=show_id %}', function (data) {
-        run_show(show_frame, data);
+        g_show_data = data;
+        run_show();
     });
 });
 </script>

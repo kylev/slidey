@@ -1,4 +1,11 @@
-function run_show(show_frame, data) {
-    // Show the data in show_frame
-    show_frame.location.href = data[0]['fields']['url'];
+var g_show_frame;
+var g_show_data;
+var g_current_item = -1;
+
+function run_show() {
+    g_current_item = (g_current_item + 1) % g_show_data.length;
+
+    g_show_frame.location.href = g_show_data[g_current_item]['fields']['url'];
+    setTimeout('run_show()',
+               1000 * g_show_data[g_current_item]['fields']['display_duration']);
 }

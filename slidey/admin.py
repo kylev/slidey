@@ -1,7 +1,7 @@
 from django.contrib import admin
 
-from slideshow.slidey.models import *
+import slideshow.slidey.models
 
-admin.site.register(SlideShow)
-admin.site.register(DisplayItem)
+admin.site.register(slideshow.slidey.models.SlideShow)
+admin.site.register(slideshow.slidey.models.DisplayItem)
 

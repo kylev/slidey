@@ -13,6 +13,9 @@ from django.template import loader
 from slideshow.slidey.models import SlideShow, DisplayItem
 
 
+STATIC_ROOT = os.path.dirname(os.path.normpath(__file__)) + '/static'
+
+
 def index(request, form=None):
     if not form:
         form = AuthenticationForm()
@@ -22,8 +25,6 @@ def index(request, form=None):
                                              'form': form})
 
 
-STATIC_ROOT = os.path.dirname(os.path.normpath(__file__)) + '/static'
-
 def static(request, path):
     """Return app-relative static resources and collateral."""
     return django.views.static.serve(request, path, STATIC_ROOT)
@@ -32,6 +33,12 @@ def static(request, path):
 def show(request, show_id):
     """TODO Display a slide show."""
     return render_to_response('show_frameset.html', {'show_id': show_id})
+
+
+def show_contents(request, show_id):
+    """Return a JSON description of the elements in a show."""
+    slides = SlideShow.objects.get(id=show_id).displayitem_set.all()
+    return HttpResponse(serialize('json', slides), mimetype='application/json')
 
 
 def do_login(request):
@@ -57,12 +64,6 @@ def manage(request):
     my_shows = SlideShow.objects.filter(owner=request.user)
 
     return render_to_response('manage.html', {'show_list': my_shows})
-
-
-def show_contents(request, show_id):
-    """Return a JSON description of the elements in a show."""
-    slides = SlideShow.objects.get(id=show_id).displayitem_set.all()
-    return HttpResponse(serialize('json', slides), mimetype='application/json')
 
 
 @login_required
