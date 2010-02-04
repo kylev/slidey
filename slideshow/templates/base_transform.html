@@ -1,0 +1,22 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+    "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <title>Transform::RSS</title>
+  <script type="text/javascript" src="{% url slidey-static "jquery/jquery-1.3.1.js" %}"></script>
+  <link rel="stylesheet" href="{% url slidey-static "jquery/themes/base/ui.all.css" %}" type="text/css" media="screen" title="Flora (Default)" />
+  <script type="text/javascript" src="{% url slidey-static "jquery/ui/jquery.ui.all.js" %}"></script>
+  <script type="text/javascript" src="{% url slidey-static "slidey.js" %}"></script>
+  <script type="text/javascript">
+    var g_url = "{{ slide.url }}";
+  </script>
+  {% block pagescript %}{% endblock %}
+</head>
+<body>
+
+<div id="content">
+{% block content %}{% endblock %}
+</div>
+
+</body>
+</html>

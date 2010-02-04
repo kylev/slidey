@@ -7,7 +7,7 @@ from django.contrib.auth.forms import AuthenticationForm
 from django.core.urlresolvers import reverse
 from django.core.serializers import serialize
 from django.http import HttpResponse, HttpResponseRedirect
-from django.shortcuts import render_to_response
+from django.shortcuts import render_to_response, get_object_or_404
 from django.template import loader
 
 from slidey.slideshow.models import SlideShow, DisplayItem
@@ -39,6 +39,14 @@ def show_contents(request, show_id):
     """Return a JSON description of the elements in a show."""
     slides = SlideShow.objects.get(id=show_id).displayitem_set.all()
     return HttpResponse(serialize('json', slides), mimetype='application/json')
+
+
+def transform(request, item_id):
+    """Pump out the fancy transforming web page for a special URL."""
+    slide = get_object_or_404(DisplayItem, pk=item_id)
+    page = 'transform_%s.html' % (slide.mode)
+
+    return render_to_response(page, {'slide': slide})
 
 
 def do_login(request):

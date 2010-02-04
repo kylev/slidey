@@ -6,6 +6,7 @@ urlpatterns = patterns(
     (r'^$', 'index', None, 'slidey-index'),
     (r'^static/(?P<path>.*)$', 'static', None, 'slidey-static'),
     (r'^(?P<show_id>\d+)/$', 'show'),
+    (r'^transform/(?P<item_id>\d+)/$', 'transform'),
     (r'^login/$', 'do_login', None, 'slidey-login'),
     (r'^logout/$', 'do_logout', None, 'slidey-logout'),
     (r'^manage/$', 'manage', None, 'slidey-manage'),
