@@ -1,0 +1,11 @@
+{% extends "base_transform.html" %}
+{% block pagescript %}
+<script type="text/javascript">
+$("#theimage").animate({ width:"90%"}, 1000);
+/* alert("Image page"); */
+</script>
+{% endblock %}
+
+{% block content %}
+<img id="theimage" src="{{ slide.url }}" />
+{% endblock %}

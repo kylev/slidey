@@ -44,7 +44,7 @@ def show_contents(request, show_id):
 def transform(request, item_id):
     """Pump out the fancy transforming web page for a special URL."""
     slide = get_object_or_404(DisplayItem, pk=item_id)
-    page = 'transform_%s.html' % (slide.mode)
+    page = 'transform_%s.html' % (slide.mode,)
 
     return render_to_response(page, {'slide': slide})
 

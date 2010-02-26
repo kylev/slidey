@@ -13,6 +13,7 @@ class SlideShow(models.Model):
 class DisplayItem(models.Model):
     MODE_CHOICES = ((None, u'Regular'),
                     (u'RSS', u'RSS'),
+                    (u'img', u'Image'),
                     )
 
     slide_show = models.ForeignKey(SlideShow)
